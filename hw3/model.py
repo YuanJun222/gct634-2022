@@ -173,7 +173,7 @@ class Transcriber_CRNN(nn.Module):
         x = self.onset_conv_stack(mel)
         x, (hn, cn) = self.onset_lstm(x)
         onset_out = self.onset_fc(x)
-        
+       
         x, (hn, cn) = self.combined_lstm(x)
         frame_out = self.combined_fc(x)
-        return frame_out, onset_out
+        return frame_out, onset_out"""
