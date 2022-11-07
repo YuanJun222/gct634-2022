@@ -96,10 +96,10 @@ class Transcriber_RNN(nn.Module):
         # Notice: Changing the initialization order may fail the tests.
         self.melspectrogram = LogMelSpectrogram()
 
-        self.frame_lstm = torch.nn.LSTM(N_MELS, 88, num_layers=2)
+        self.frame_lstm = torch.nn.LSTM(N_MELS, 88, bidirectional=2, num_layers=2, batch_first=2)
         self.frame_fc = torch.nn.Linear(88*2, 88)
 
-        self.onset_lstm = torch.nn.LSTM(N_MELS, 88, num_layers=2)
+        self.onset_lstm = torch.nn.LSTM(N_MELS, 88, bidirectional=2, num_layers=2, batch_first=2)
         self.onset_fc = torch.nn.Linear(88*2, 88)
 
     def forward(self, audio):
@@ -120,12 +120,12 @@ class Transcriber_CRNN(nn.Module):
         # Notice: Changing the initialization order may fail the tests.
         self.melspectrogram = LogMelSpectrogram()
 
-        self.frame_conv_stack = ConvStack(N_MELS,cnn_unit, fc_unit)
-        self.frame_lstm = nn.LSTM(fc_unit, 88, bidirectional=2, num_layers=2)
+        self.frame_conv_stack = ConvStack(N_MELS, cnn_unit, fc_unit)
+        self.frame_lstm = nn.LSTM(fc_unit, 88, bidirectional=2, num_layers=2, batch_first=2)
         self.frame_fc = torch.nn.Linear(88*2, 88)
 
         self.onset_conv_stack = ConvStack(N_MELS,cnn_unit, fc_unit)
-        self.onset_lstm = nn.LSTM(fc_unit, 88, bidirectional=2, num_layers=2)
+        self.onset_lstm = nn.LSTM(fc_unit, 88, bidirectional=2, num_layers=2, batch_first=2)
         self.onset_fc = torch.nn.Linear(88*2, 88)
 
     def forward(self, audio):
@@ -142,7 +142,7 @@ class Transcriber_CRNN(nn.Module):
         return frame_out, onset_out
 
 
-class Transcriber_ONF(nn.Module):
+"""class Transcriber_ONF(nn.Module):
     def __init__(self, cnn_unit, fc_unit):
         super().__init__()
         # Notice: Changing the initialization order may fail the tests.
@@ -152,10 +152,10 @@ class Transcriber_ONF(nn.Module):
         self.frame_fc = nn.Linear(fc_unit, 88)
 
         self.onset_conv_stack = ConvStack(N_mels,cnn_unit, fc_unit)
-        self.onset_lstm = nn.LSTM(fc_unit, 88, bidirectional=2, num_layers=2)
+        self.onset_lstm = nn.LSTM(fc_unit, 88, bidirectional=2, num_layers=2, batch_first=2)
         self.onset_fc = (88*2, 88)
 
-        self.combined_lstm = nn.LSTM(88*2, 88, bidirectional=2, num_layers=2)
+        self.combined_lstm = nn.LSTM(88*2, 88, bidirectional=2, num_layers=2, batch_first=2)
         self.combined_fc = nn.Sequential(
             nn.Linear(88*2,88),
             nn.sigmoid()
