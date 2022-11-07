@@ -106,10 +106,10 @@ class Transcriber_RNN(nn.Module):
         # TODO: Question 1
         mel = self.melspectrogram(audio)
         
-        x = self.frame_lstm(mel)
+        x, (h_n, c_n) = self.frame_lstm(mel)
         frame_out = self.frame_fc(x)
         
-        x = self.onset_lstm(mel)
+        x, (h_n, c_n) = self.onset_lstm(mel)
         onset_out = self.onset_fc
         
         return frame_out, onset_out
