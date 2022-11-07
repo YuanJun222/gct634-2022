@@ -96,14 +96,22 @@ class Transcriber_RNN(nn.Module):
         # Notice: Changing the initialization order may fail the tests.
         self.melspectrogram = LogMelSpectrogram()
 
-        self.frame_lstm = ...
-        self.frame_fc = ...
+        self.frame_lstm = torch.nn.LSTM(n_mels, 88, num_layers=2)
+        self.frame_fc = torch.nn.Linear(n_mels,88)
 
-        self.onset_lstm = ...
-        self.onset_fc = ...
+        self.onset_lstm = torch.nn.LSTM(n_mels, 88, num_layers=2)
+        self.onset_fc = torch.nn.Linear(n_mels,88)
 
     def forward(self, audio):
         # TODO: Question 1
+        mel = self.melspectrogram(audio)
+        
+        x = self.frame_lstm(mel)
+        frame_out = self.frame_fc(x)
+        
+        x = self.onset_lstm(mel)
+        onset_out = self.onset_fc
+        
         return frame_out, onset_out
 
 
